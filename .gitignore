@@ -1,3 +1,4 @@
 # Ignore all .env files across the project
 *.env
 /backend/node_modules
+/client/node_modules
