@@ -102,5 +102,8 @@ export const updateProfile = async () => {
     );
 
     res.status(200).json(updateUser);
-  } catch (err) {}
+  } catch (err) {
+    console.log("Error occured while adding profile", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
