@@ -6,10 +6,11 @@ export const generateToken = (userId, res) => {
   });
 
   res.cookie("jwt", token, {
-    maxAge: 7 * 24 * 68 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true, // prevent XSS attacks
     sameSite: "strict",
-    secure: process.NODE_ENV !== "development",
+    // secure: process.NODE_ENV !== "development",
+    secure: process.env.NODE_ENV === "production",
   });
 
   return token;
