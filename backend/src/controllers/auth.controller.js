@@ -1,3 +1,4 @@
+import cloudinary from "../lib/cloudinary.js";
 import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
@@ -60,16 +61,46 @@ export const login = async (req, res) => {
 
     const isPassword = await bcrypt.compare(password, user.password);
     if (!isPassword) {
-      return res.status(401).json({ message: "Invalid Password" });
+      return res.status(401).json({ message: "Invalid Credential" });
     }
     generateToken(user._id, res);
     res.status(201).json({
       _id: user._id,
-      // fullName: fullName,
+      fullName: user.fullName,
       email: email,
-      password: isPassword,
+      profilePic: user.profilePic,
     });
   } catch (err) {
     console.log(err);
   }
+};
+
+export const logout = (req, res) => {
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (err) {
+    console.log("Error in logout controller", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const updateProfile = async () => {
+  try {
+    const { profilePic } = req.body;
+    const userId = req.user._id;
+
+    if (!profilePic) {
+      return res.status(401).json({ message: "Profile picture is required" });
+    }
+
+    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+    const updateUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePic: uploadResponse.secure_url },
+      { new: ture }
+    );
+
+    res.status(200).json(updateUser);
+  } catch (err) {}
 };
