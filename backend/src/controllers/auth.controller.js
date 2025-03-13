@@ -85,7 +85,7 @@ export const logout = (req, res) => {
   }
 };
 
-export const updateProfile = async () => {
+export const updateProfile = async (req, res) => {
   try {
     const { profilePic } = req.body;
     const userId = req.user._id;
@@ -98,10 +98,11 @@ export const updateProfile = async () => {
     const updateUser = await User.findByIdAndUpdate(
       userId,
       { profilePic: uploadResponse.secure_url },
-      { new: ture }
+      { new: true }
     );
 
-    res.status(200).json(updateUser);
+    let userProfile = res.status(200).json(updateUser);
+    userProfile.save();
   } catch (err) {
     console.log("Error occured while adding profile", err);
     res.status(500).json({ message: "Internal server error" });
