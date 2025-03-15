@@ -13,12 +13,13 @@ dotenv.config();
 const PORT = process.env.PORT;
 
 const __dirname = path.resolve();
+const allowedOrigins = ["http://localhost:5173", "https://chimeln.vercel.app"];
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "*",
+    origin: allowedOrigins,
     credentials: true,
   })
 );
@@ -26,10 +27,10 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoute);
 if (process.env.MODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../../frontend", "dist", "index.html"));
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
 }
 

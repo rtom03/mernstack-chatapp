@@ -5,9 +5,10 @@ import express from "express";
 const app = express();
 const server = http.createServer(app);
 
+const allowedOrigins = ["http://localhost:5173", "https://chimeln.vercel.app"];
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: allowedOrigins,
   },
 });
 
