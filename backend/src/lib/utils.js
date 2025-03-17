@@ -12,6 +12,7 @@ export const generateToken = (userId, res) => {
     // secure: process.NODE_ENV !== "development",
     secure: process.env.NODE_ENV === "production",
     sameSite: "None",
+    domain: "backend-ldk0.onrender.com",
   });
 
   return token;
